@@ -46,12 +46,11 @@ public class Main {
                     deleteSong(scanner, library);
                     break;
                 case 4:
-                    System.out.println("View Sorted Search Results");
-                    viewSortedList(scanner, library); 
+                    searchForSong(scanner, library); 
                     break;
                 case 5:
-                    running = false;
-                    System.out.println("Exiting the application. Goodbye!");
+                    System.out.println("View Sorted Search Results");
+                    viewSortedList(scanner, library); 
                     break;
                 case 6: 
                 playSong(scanner, library);
@@ -84,7 +83,7 @@ public class Main {
         System.out.println("2. Add a New Song");
         System.out.println("3. Delete a Song by Title");
         System.out.println("4. Search");
-        System.out.println("5. Exit");
+        System.out.println("5. View Sorted List (by artist, title, plays)");
         System.out.println("6. Play a song");
         System.out.println("\n Playlist ---");
         System.out.println("7. Add song to Now Playing Queue");
@@ -174,8 +173,6 @@ public class Main {
     
     /**
      * Displays a sub-menu for sorting options and prints a sorted list of songs.
-     * @param scanner The Scanner for user input.
-     * @param library The music library to be sorted and displayed.
      */
     private static void viewSortedList(Scanner scanner, MusicLibrary library) {
         System.out.println("\n--- Sort Library By ---");

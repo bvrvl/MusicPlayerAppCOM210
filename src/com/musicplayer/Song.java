@@ -78,6 +78,6 @@ public class Song {
      */
     @Override
     public String toString() {
-        return String.format("\"%s\" by %s (Album: %s) [Plays:%d]", title, artist, album, playCount);
+        return String.format("\"%s\" by %s (Album: %s) [Plays: %d]", title, artist, album, playCount);
     }
 }

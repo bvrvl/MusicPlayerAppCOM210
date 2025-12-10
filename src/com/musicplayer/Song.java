@@ -16,6 +16,7 @@ public class Song {
     private String album;
     private String genre;
     private int durationInSeconds;
+    private int playCount;
     
     public Song(String title, String artist, String album, String genre, int durationInSeconds) {
         this.title = title;
@@ -23,6 +24,7 @@ public class Song {
         this.album = album;
         this.genre = genre;
         this.durationInSeconds = durationInSeconds;
+        this.playCount = 0; //all new songs start with 0 plays
     }
     
     /**
@@ -59,7 +61,15 @@ public class Song {
     public int getDurationInSeconds() {
         return durationInSeconds;
     }
+    
+    /** The no. of times the song has been played**/
+    public int getPlayCount() {
+        return playCount;
+    }
    
+    public void incrementPlayCount() {
+        this.playCount++;
+    }
 
     /**
 
@@ -68,6 +78,6 @@ public class Song {
      */
     @Override
     public String toString() {
-        return String.format("\"%s\" by %s (Album: %s)", title, artist, album);
+        return String.format("\"%s\" by %s (Album: %s) [Plays:%d]", title, artist, album, playCount);
     }
 }

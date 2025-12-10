@@ -52,19 +52,23 @@ public class Main {
                     running = false;
                     System.out.println("Exiting the application. Goodbye!");
                     break;
-                case 6:
-                    addSongToQueue(scanner, library, nowPlayingQueue);
+                case 6: 
+                playSong(scanner, library);
                 break;
                 case 7:
-                    viewQueue(nowPlayingQueue);
+                addSongToQueue(scanner, library, nowPlayingQueue);
                 break;
-                case 8: // Update exit case
-                    running = false;
-                    System.out.println("Exiting the application. Goodbye!");
+                case 8: 
+                viewQueue(nowPlayingQueue);
                 break;
-                default:
-                    System.out.println("Invalid choice. Please enter a number between 1 and 8.");
+                case 9:
+                running = false;
+                System.out.println("Exiting the application. Goodbye!");
                 break;
+            default:
+                System.out.println("Invalid choice. Please enter a number between 1 and 9.");
+                break;
+
             }
         }
         scanner.close();
@@ -80,10 +84,11 @@ public class Main {
         System.out.println("3. Delete a Song by Title");
         System.out.println("4. Search");
         System.out.println("5. Exit");
+        System.out.println("6. Play a song");
         System.out.println("\n Playlist ---");
-        System.out.println("6. Add song to Now Playing queue");
-        System.out.println("7. View Now Playing queue");
-        System.out.println("8. Exit");
+        System.out.println("7. Add song to Now Playing Queue");
+        System.out.println("8. View Now Playing queue");
+        System.out.println("9. Exit");
     }
     
     /**
@@ -169,6 +174,7 @@ public class Main {
         System.out.println("\n--- Sort Library By ---");
         System.out.println("1. Sort by Title");
         System.out.println("2. Sort by Artist");
+        System.out.println("3. View Top 3 Most Played Songs");
         System.out.print("Enter your choice: ");
         int sortChoice = scanner.nextInt();
         scanner.nextLine(); // use newline from before
@@ -186,6 +192,12 @@ public class Main {
                 comparator = Comparator.comparing(Song::getArtist);
                 sortBy = "Artist";
                 break;
+            case 3: //For the top K case
+                // To get the most played, we sort by playCount in DESCENDING order.
+                comparator = Comparator.comparingInt(Song::getPlayCount).reversed();
+                sortBy = "Most Played";
+                isTopK = true;
+                break;
             default:
                 System.out.println("Invalid choice. Returning to main menu.");
                 return;
@@ -193,12 +205,44 @@ public class Main {
 
         ArrayList<Song> sortedList = library.getSortedSongs(comparator);
         
-        System.out.println("\n--- Library Sorted by " + sortBy + " ---");
-        for (int i = 0; i < sortedList.size(); i++) {
-            System.out.println((i + 1) + ". " + sortedList.get(i).toString());
+        if (isTopK) {
+            // Special handling for the Top K feature
+            System.out.println("\n--- Top 3 Most Played Songs ---");
+            // Determine how many songs to show: either 3, or the total size if the library is smaller.
+            int limit = Math.min(3, sortedList.size()); 
+            if (limit == 0) {
+                 System.out.println("No songs in the library to display.");
+            } else {
+                for (int i = 0; i < limit; i++) {
+                    System.out.println((i + 1) + ". " + sortedList.get(i).toString());
+                }
+            }
+        } else {
+            // The regular sorting display
+            System.out.println("\n--- Library Sorted by " + sortBy + " ---");
+            for (int i = 0; i < sortedList.size(); i++) {
+                System.out.println((i + 1) + ". " + sortedList.get(i).toString());
+            }
         }
         System.out.println("------------------------------------");
     }
     
+    /* Prompts the user for a song title, finds the song, and increments its play count.
+     */
+    private static void playSong(Scanner scanner, MusicLibrary library) {
+        System.out.println("\n--- Play a Song ---");
+        System.out.print("Enter the exact title of the song to play: ");
+        String songTitle = scanner.nextLine();
+        
+        // Use the helper method to find the song object.
+        Song songToPlay = library.findSongByTitle(songTitle);
+
+        if (songToPlay != null) {
+            songToPlay.incrementPlayCount();
+            System.out.println("Now playing: " + songToPlay.getTitle() + ". Its play count is now " + songToPlay.getPlayCount() + ".");
+        } else {
+            System.out.println("Could not find a song with that title in the library.");
+        }
+    }
 }
     

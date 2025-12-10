@@ -4,6 +4,7 @@
  */
 package com.musicplayer;
 
+import java.util.Scanner;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.ArrayList;
@@ -107,7 +108,13 @@ public class Main {
         System.out.print("Enter Duration (in seconds): ");
         int duration = scanner.nextInt();
         scanner.nextLine(); // Use newline left by above
-
+        
+        
+        Song newSong = new Song(title, artist, album, genre, duration);
+        library.insert(newSong);
+        System.out.println("Successfully added: " + newSong.getTitle());
+        
+        
     }
     
     private static void deleteSong(Scanner scanner, MusicLibrary library) {
@@ -181,6 +188,7 @@ public class Main {
 
         Comparator<Song> comparator = null;
         String sortBy = "";
+        boolean isTopK = false;
 
         switch (sortChoice) {
             case 1:

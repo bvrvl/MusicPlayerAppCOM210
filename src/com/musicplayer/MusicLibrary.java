@@ -46,7 +46,16 @@ public class MusicLibrary {
      *
      */
     public void insert(Song song) {
-        // TODO: Implement the insertion logic.
+        Node newNode = new Node(song);
+        if (head == null) {
+            head = newNode;
+            tail = newNode;
+        } else {
+            tail.next = newNode;
+            newNode.prev = tail;
+            tail = newNode;
+        }
+        size++;
         
     }
 
@@ -54,8 +63,18 @@ public class MusicLibrary {
      * Traverses the list from head to tail and prints the details of each song.
      */
     public void viewAll() {
-        System.out.println("Displaying All Songs in Library");
-        
+        System.out.println("\n--- Displaying All Songs in Library ---");
+        if (head == null) {
+            System.out.println("The library is currently empty.");
+        } else {
+            Node current = head;
+            int count = 1;
+            while (current != null) {
+                System.out.println(count + ". " + current.data.toString());
+                current = current.next;
+                count++;
+            }
+        }
         System.out.printf("Total Songs: %d\n", this.size);
         System.out.println("------------------------------------");
     }

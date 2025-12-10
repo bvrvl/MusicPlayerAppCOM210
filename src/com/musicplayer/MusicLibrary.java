@@ -37,4 +37,32 @@ public class MusicLibrary {
         this.size = 0;
     }
     
+    /**
+     * Appends a new song to the end of the list. This operation has a time
+     *
+     */
+    public void insert(Song song) {
+        // TODO: Implement the insertion logic.
+        
+    }
+
+    /**
+     * Traverses the list from head to tail and prints the details of each song.
+     */
+    public void viewAll() {
+        System.out.println("Displaying All Songs in Library");
+        
+        System.out.printf("Total Songs: %d\n", this.size);
+        System.out.println("------------------------------------");
+    }
+    
+    /**
+     * Searches for and removes a song from the list based on its title.
+     */
+    public boolean delete(String songTitle) {
+        // TODO: Implement the deletion logic.
+        
+        return false;
+    }
 }
+   

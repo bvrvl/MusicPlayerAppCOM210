@@ -4,6 +4,10 @@
  */
 package com.musicplayer;
 
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.ArrayList;
+import java.util.Comparator;
 /**
  *
  * @author saurabh
@@ -13,7 +17,8 @@ public class Main {
      public static void main(String[] args) {
         MusicLibrary library = new MusicLibrary();
         Scanner scanner = new Scanner(System.in);
-
+        
+        Queue<Song> nowPlayingQueue = new LinkedList<>();
         
         boolean running = true;
         while (running) {
@@ -40,15 +45,26 @@ public class Main {
                     deleteSong(scanner, library);
                     break;
                 case 4:
-                    System.out.println("Search feature has not been implemented.");
+                    System.out.println("View Sorted Search Results");
+                    viewSortedList(scanner, library); 
                     break;
                 case 5:
                     running = false;
                     System.out.println("Exiting the application. Goodbye!");
                     break;
+                case 6:
+                    addSongToQueue(scanner, library, nowPlayingQueue);
+                break;
+                case 7:
+                    viewQueue(nowPlayingQueue);
+                break;
+                case 8: // Update exit case
+                    running = false;
+                    System.out.println("Exiting the application. Goodbye!");
+                break;
                 default:
-                    System.out.println("Invalid choice. Please enter a number between 1 and 5.");
-                    break;
+                    System.out.println("Invalid choice. Please enter a number between 1 and 8.");
+                break;
             }
         }
         scanner.close();
@@ -64,6 +80,10 @@ public class Main {
         System.out.println("3. Delete a Song by Title");
         System.out.println("4. Search");
         System.out.println("5. Exit");
+        System.out.println("\n Playlist ---");
+        System.out.println("6. Add song to Now Playing queue");
+        System.out.println("7. View Now Playing queue");
+        System.out.println("8. Exit");
     }
     
     /**
@@ -89,8 +109,96 @@ public class Main {
         System.out.println("\n--- Delete a Song ---");
         System.out.print("Enter the exact title of the song to delete: ");
         String titleToDelete = scanner.nextLine();
-
-        // TODO: Call the library's delete method with the title provided by the user.
+        if (library.delete(titleToDelete)) {
+            System.out.println("Successfully deleted \"" + titleToDelete + "\".");
+        } else {
+            System.out.println("Could not find a song with that title.");
+        }
     }
+    
+    /* Asks the user for a search term and calls the library's search method.*/
+    
+    private static void searchForSong(Scanner scanner, MusicLibrary library) {
+    System.out.println("\n--- Search for a Song ---");
+    System.out.print("Enter a title or artist to search for: ");
+    String searchTerm = scanner.nextLine();
+    library.searchByTitleOrArtist(searchTerm);
+}
+    /**
+     * Finds a song in the library and adds it to the now playing queue.
+     */
+    private static void addSongToQueue(Scanner scanner, MusicLibrary library, Queue<Song> queue) {
+        System.out.println("\n--- Add to Queue ---");
+        System.out.print("Enter the exact title of the song to add to the queue: ");
+        String songTitle = scanner.nextLine();
+        
+        // We need to find the song object first.
+        Song songToAdd = library.findSongByTitle(songTitle);
+
+        if (songToAdd != null) {
+            queue.offer(songToAdd);
+            System.out.println("Added \"" + songToAdd.getTitle() + "\" to the Now Playing queue.");
+        } else {
+            System.out.println("Could not find a song with that title in the library.");
+        }
+    }
+
+    /**
+     * Displays the songs currently in the Now Playing queue.
+     */
+    private static void viewQueue(Queue<Song> queue) {
+        System.out.println("\n--- Now Playing Queue ---");
+        if (queue.isEmpty()) {
+            System.out.println("The queue is empty.");
+        } else {
+            int count = 1;
+            for (Song song : queue) {
+                System.out.println(count + ". " + song.toString());
+                count++;
+            }
+        }
+        System.out.println("-------------------------");
+    }
+    
+    /**
+     * Displays a sub-menu for sorting options and prints a sorted list of songs.
+     * @param scanner The Scanner for user input.
+     * @param library The music library to be sorted and displayed.
+     */
+    private static void viewSortedList(Scanner scanner, MusicLibrary library) {
+        System.out.println("\n--- Sort Library By ---");
+        System.out.println("1. Sort by Title");
+        System.out.println("2. Sort by Artist");
+        System.out.print("Enter your choice: ");
+        int sortChoice = scanner.nextInt();
+        scanner.nextLine(); // use newline from before
+
+        Comparator<Song> comparator = null;
+        String sortBy = "";
+
+        switch (sortChoice) {
+            case 1:
+                
+                comparator = Comparator.comparing(Song::getTitle);
+                sortBy = "Title";
+                break;
+            case 2:
+                comparator = Comparator.comparing(Song::getArtist);
+                sortBy = "Artist";
+                break;
+            default:
+                System.out.println("Invalid choice. Returning to main menu.");
+                return;
+        }
+
+        ArrayList<Song> sortedList = library.getSortedSongs(comparator);
+        
+        System.out.println("\n--- Library Sorted by " + sortBy + " ---");
+        for (int i = 0; i < sortedList.size(); i++) {
+            System.out.println((i + 1) + ". " + sortedList.get(i).toString());
+        }
+        System.out.println("------------------------------------");
+    }
+    
 }
     
